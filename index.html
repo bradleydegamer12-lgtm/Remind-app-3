@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reminder.app</title>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Splash Screen Animation */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeOut 0.8s ease-in-out 2.2s forwards;
+        }
+
+        .splash-text {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff416c, #8a2387, #00b4db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: popIn 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+
+        /* Main App Layout */
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        header {
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .app-title {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #ff416c, #8a2387);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Scrollable Menu */
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding-bottom: 50px;
+        }
+
+        .menu-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            cursor: pointer;
+        }
+
+        /* Vibrant Accent Colors */
+        .menu-card.pink { border-left: 8px solid #ff416c; }
+        .menu-card.blue { border-left: 8px solid #00b4db; }
+        .menu-card.green { border-left: 8px solid #11998e; }
+        .menu-card.purple { border-left: 8px solid #8a2387; }
+        .menu-card.orange { border-left: 8px solid #ff9900; }
+
+        .icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .info h3 {
+            font-size: 1.1rem;
+            color: #222;
+        }
+
+        .info p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        /* Detail Screen Overlay */
+        #detail-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            z-index: 2000;
+            padding: 30px 20px;
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #detail-screen.hidden {
+            transform: translateY(100%);
+        }
+
+        #close-btn {
+            align-self: flex-start;
+            background: #f0f0f0;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+
+        #screen-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        #screen-body {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Keyframes */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Splash Screen Intro -->
+    <div id="splash-screen">
+        <h1 class="splash-text">reminder.app</h1>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <header>
+            <h2 class="app-title">reminder.app</h2>
+            <p class="subtitle">Stay organized, stay colorful.</p>
+        </header>
+
+        <!-- Menu with Scroll Bending Effect -->
+        <main class="menu-list" id="menuList">
+            <div class="menu-card pink" data-title="Quick Alarms" data-content="Set quick 5-minute, 15-minute, or custom alarms instantly to build strong daily habits.">
+                <span class="icon">🔔</span>
+                <div class="info">
+                    <h3>Quick Alarms</h3>
+                    <p>Set fast, one-tap reminders for daily habits.</p>
+                </div>
+            </div>
+
+            <div class="menu-card blue" data-title="Smart Tasks" data-content="Organize your upcoming to-do items using color-coded tags, priorities, and checkable task lists.">
+                <span class="icon">📋</span>
+                <div class="info">
+                    <h3>Smart Tasks</h3>
+                    <p>Organize your to-do lists with colorful tags.</p>
+                </div>
+            </div>
+
+            <div class="menu-card green" data-title="Calendar Sync" data-content="Sync directly with Google Calendar or Apple Calendar to keep all scheduled events organized seamlessly.">
+                <span class="icon">📅</span>
+                <div class="info">
+                    <h3>Calendar Sync</h3>
+                    <p>Connect your events and never miss a deadline.</p>
+                </div>
+            </div>
+
+            <div class="menu-card purple" data-title="Focus & Stats" data-content="Review active daily streaks, completed task trends, and focus session timer performance metrics.">
+                <span class="icon">📊</span>
+                <div class="info">
+                    <h3>Focus & Stats</h3>
+                    <p>Track your daily productivity streaks visually.</p>
+                </div>
+            </div>
+
+            <div class="menu-card orange" data-title="Custom Themes" data-content="Switch light or dark modes, customize accent border colors, and change alert sound effects.">
+                <span class="icon">⚙️</span>
+                <div class="info">
+                    <h3>Custom Themes</h3>
+                    <p>Personalize your colors and alert sounds.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail View Modal -->
+    <div id="detail-screen" class="hidden">
+        <button id="close-btn">← Back</button>
+        <h2 id="screen-title">Option Title</h2>
+        <p id="screen-body">Option details go here...</p>
+    </div>
+
+    <script>
+        // Scroll 3D Shift Animation
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.menu-card');
+            const viewportHeight = window.innerHeight;
+
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const distanceFromCenter = cardCenter - (viewportHeight / 2);
+                
+                const shiftX = distanceFromCenter * 0.05; 
+                const rotate = distanceFromCenter * 0.02;
+
+                card.style.transform = `translateX(${shiftX}px) rotate(${rotate}deg)`;
+            });
+        });
+
+        // Sub-screen Navigation Logic
+        const detailScreen = document.getElementById('detail-screen');
+        const screenTitle = document.getElementById('screen-title');
+        const screenBody = document.getElementById('screen-body');
+        const closeBtn = document.getElementById('close-btn');
+
+        document.querySelectorAll('.menu-card').forEach(card => {
+            card.addEventListener('click', () => {
+                screenTitle.textContent = card.getAttribute('data-title');
+                screenBody.textContent = card.getAttribute('data-content');
+                detailScreen.classList.remove('hidden');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            detailScreen.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
